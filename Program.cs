@@ -59,7 +59,22 @@ namespace Proiect_PIU
                             Console.Write("An fabricatie: ");
                             int anFabricatie = int.Parse(Console.ReadLine());
 
-                            masini[numarMasini] = new Masina(model, anFabricatie);
+                            Console.WriteLine("Introduceti culoarea masinii(Rosu,Alb,Negru,Verde,Albastru): ");
+                            Culoare culoare;
+                            while (!Enum.TryParse(Console.ReadLine(), true, out culoare))
+                            {
+                                Console.WriteLine("Introduceti o culaore valida");
+                            }
+                            Console.WriteLine("Introduceti optiunile masinii (AerConditionat/Navigatie/CutieAutomata):");
+                            Optiuni optiuni = 0;
+                            foreach (string optiunee in Console.ReadLine().Split(','))
+                            {
+                                if(Enum.TryParse(optiunee.Trim(),true,out Optiuni optiuneEnum))
+                                {
+                                    optiuni |= optiuneEnum;
+                                }
+                            }
+                            masini[numarMasini] = new Masina(model, anFabricatie,culoare,optiuni);
                             numarMasini++;
                         }
                         else
