@@ -5,11 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Proiect_PIU
-
-    internal class Program
+{
+    internal class Client
     {
-        static void Main(string[] args)
-        {
-        }
     }
 }
