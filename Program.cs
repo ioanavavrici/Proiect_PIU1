@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 namespace Proiect_PIU
@@ -38,7 +40,8 @@ namespace Proiect_PIU
                 Console.WriteLine("7. Afisare angajati");
                 Console.WriteLine("8. Afisare clienti");
                 Console.WriteLine("9. Cautare masina dupa anul de fabricatie");
-                Console.WriteLine("10. Iesire");
+                Console.WriteLine("10.Citire cuvinte in fisier si stocarea lor intr-un tablou in scara");
+                Console.WriteLine("11 Iesire");
 
                 Console.Write("Alegeti optiunea: ");
                 string optiune = Console.ReadLine();
@@ -187,8 +190,50 @@ namespace Proiect_PIU
                             Console.WriteLine("Nu a fost gasita nicio masina pentru anul specificat.");
                         }
                         break;
-
                     case "10":
+                        string file = "C:\\Users\\vavri\\Downloads\\Proiect_PIU\\Proiect_PIU\\PIU.txt"; 
+                        Dictionary<char,List<string>> cuvintePeLitera= new Dictionary<char,List<string>>();
+                        try
+                        {
+                            string[] linii = File.ReadAllLines(file);
+                            foreach(string linia in linii)
+                            {
+                                string[] cuvinte=linia.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
+                                foreach(string cuvant in cuvinte)
+                                {
+                                    if(!string.IsNullOrEmpty(cuvant))
+                                    {
+                                        char primaL = cuvant[0];
+                                        if (primaL == char.ToUpper(cuvant[0]))
+                                            primaL = char.ToLower(primaL);
+                                        if(!cuvintePeLitera.ContainsKey(primaL))
+                                        {
+                                            cuvintePeLitera[primaL]=new List<string>();
+
+                                        }
+                                        cuvintePeLitera[primaL].Add(cuvant);
+                                    }
+                                }
+                            }
+                            foreach(var i in cuvintePeLitera)
+                            {
+                                Console.WriteLine($"Cuvintele pentru litera '{i.Key}':");
+                                foreach(string cuvant in i.Value)
+                                {
+                                    Console.WriteLine(cuvant);
+                                }
+                                Console.WriteLine();
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("A apărut o excepție: " + e.Message);
+                        }
+                    
+                            break;
+
+                    case "11":
                         Console.WriteLine("Program incheiat.");
                         return;
 
