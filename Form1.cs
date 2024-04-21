@@ -33,6 +33,10 @@ namespace Proiect_PIU
             GetFirmaData();
             GetClientData();
             GetMasinaData();
+            foreach (Firma firm in firma)
+            {
+                comboBoxFirma.Items.Add(firm.NumeFirma);
+            }
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -105,6 +109,40 @@ namespace Proiect_PIU
             {
                 dataGridViewMasini.Rows.Add(masina.Id, masina.Model, masina.CuloareMasina, masina.OptiuniMasian);
             }
+        }
+
+        private void txtNumeAngajat_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddAngajat_Click(object sender, EventArgs e)
+        {
+            string nume = txtNumeAngajat.Text;
+            string prenume = txtPrenumeAngajat.Text;
+            string parola = txtParolaAngajat.Text;
+            string selectedFirmaName = comboBoxFirma.SelectedItem.ToString();
+            Firma selectedFirma = firma.FirstOrDefault(f => f.NumeFirma == selectedFirmaName);
+
+            if (selectedFirma != null)
+            {
+                Angajat newAngajat = new Angajat(nume, prenume, parola);
+                newAngajat.IDFirma = selectedFirma.Id;
+                angajati.Add(newAngajat);
+                Angajat.WriteToFile(angajati, "angajati.json");
+                GetAngajatData(); // Refresh DataGridView
+                firma[firma.IndexOf(selectedFirma)].AdaugaAngajat(newAngajat);
+                Firma.WriteToFile(firma, "firma.json");
+            }
+            else
+            {
+                MessageBox.Show("Select a firm for the employee.");
+            }
+        }
+
+        private void comboBoxFirma_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
     }

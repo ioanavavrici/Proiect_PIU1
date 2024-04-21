@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,45 +10,41 @@ namespace Proiect_PIU
         public string Id { get; set; }
         public string NumeFirma { get; set; }
         public List<Masina> MasiniDetinute { get; set; }
+        public List<Angajat> Angajati { get; set; }
 
-        public List<Angajat> IdAngajat {  get; set; }
-        int c;
-        // Constructor pentru inițializarea unei firme.
+        // Constructor for initializing a firm
         public Firma(string nume)
         {
-            Id = System.Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString();
             NumeFirma = nume;
             MasiniDetinute = new List<Masina>();
-            IdAngajat = new List<Angajat>();
-
+            Angajati = new List<Angajat>();
         }
 
-        // Metodă pentru adăugarea unei mașini în lista deținută de firmă.
+        // Methods for adding machines and employees
         public void AdaugaMasina(Masina masina)
         {
             MasiniDetinute.Add(masina);
         }
-        public void AdaugaAngajat(Angajat angajat) 
-        {  
-            IdAngajat.Add(angajat);
+
+        public void AdaugaAngajat(Angajat angajat)
+        {
+            Angajati.Add(angajat);
         }
 
-        // Metodă pentru returnarea listei de mașini deținute de firmă.
-        public List<Masina> ObtineMasiniDetinute()
-        {
-            return MasiniDetinute;
-        }
-        public List <Angajat>OtineAngajati()
-        { return IdAngajat; 
-        }
+        // Override ToString method
         public override string ToString()
         {
             return $"Nume: {NumeFirma}, Numar masini detinute: {MasiniDetinute.Count}";
         }
 
-        public static void WriteToFile(List<Firma> firma, string fileName)
+        // Methods for writing and reading from file
+        public static void WriteToFile(List<Firma> firme, string fileName)
         {
-            string json = JsonConvert.SerializeObject(firma);
+            string json = JsonConvert.SerializeObject(firme, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
             File.WriteAllText(fileName, json);
         }
         public static void AppendToFile(Firma firma, string fileName)
@@ -57,7 +54,6 @@ namespace Proiect_PIU
             WriteToFile(firme, fileName);
         }
 
-        // Functie pentru citirea listei de angajati dintr-un fisier
         public static List<Firma> ReadFromFile(string fileName)
         {
             List<Firma> firme = new List<Firma>();
@@ -65,7 +61,10 @@ namespace Proiect_PIU
             if (File.Exists(fileName))
             {
                 string json = File.ReadAllText(fileName);
-                firme = JsonConvert.DeserializeObject<List<Firma>>(json);
+                firme = JsonConvert.DeserializeObject<List<Firma>>(json, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                });
             }
 
             return firme;

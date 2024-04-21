@@ -25,8 +25,8 @@ namespace Proiect_PIU
             Id = Guid.NewGuid().ToString();
             Parola = parola;
         }
+    
 
-       
         public override string ToString()
         {
             return $"Nume: {Nume}, Prenume: {Prenume}, Parola: {Parola}";
