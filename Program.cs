@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms; // Add this for Form
 using Newtonsoft.Json;
 
@@ -91,7 +92,7 @@ namespace Proiect_PIU
                                 break;
                             }
                         }
-                        if (id_firma != null)
+                      /*  if (id_firma != null)
                         {
                             Console.Write("Model: ");
                             string model = Console.ReadLine();
@@ -103,22 +104,25 @@ namespace Proiect_PIU
                                 Console.WriteLine("Introduceti o culaore valida");
                             }
                             Console.WriteLine("Introduceti optiunile masinii (AerConditionat/Navigatie/CutieAutomata):");
-                            Optiuni optiuni = 0;
+                            List<Optiuni>  optiuni = null;
+                            int nr = 0;
                             foreach (string optiunee in Console.ReadLine().Split(','))
                             {
                                 if (Enum.TryParse(optiunee.Trim(), true, out Optiuni optiuneEnum))
                                 {
-                                    optiuni |= optiuneEnum;
+                                    optiuni[++nr] = optiuneEnum;
                                 }
                             }
-                            firma[indfirma].AdaugaMasina(new Masina(model, culoare, optiuni, id_firma));
+                            firma[indfirma].AdaugaMasina(new Masina(model, culoare.ToString(), optiuni.ToList()));
+                            Masina masina = new Masina(model, culoare, optiuni);
+                            masina.IdFirma= id_firma;
                             Firma.WriteToFile(firma, "firma.json");
-                            Masina.AppendToFile(new Masina(model, culoare, optiuni, id_firma), "masini.json");
+                            Masina.AppendToFile(new Masina(model, culoare, optiuni), "masini.json");
                         }
                         else
                         {
                             Console.WriteLine("Nu ati introdus un nume de firma corect");
-                        }
+                        }*/
                         break;
 
                     case "1":
