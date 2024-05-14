@@ -34,7 +34,7 @@ namespace Proiect_PIU
                     RunConsoleMenu();
                     break;
                 case "2":
-                    Application.Run(new Form1());
+                    Application.Run(new Firma_Login());
                     break;
                 case "3":
                     Console.WriteLine("Program incheiat.");
@@ -75,7 +75,7 @@ namespace Proiect_PIU
                 Console.Write("Alegeti optiunea: ");
                 string optiune = Console.ReadLine();
 
-                switch (optiune)
+               /* switch (optiune)
                 {
                     case "2":
                         Console.WriteLine("Introduceti datele masinii:");
@@ -122,14 +122,15 @@ namespace Proiect_PIU
                         else
                         {
                             Console.WriteLine("Nu ati introdus un nume de firma corect");
-                        }*/
+                        }
                         break;
 
                     case "1":
                         Console.WriteLine("Introduceti datele firmei:");
                         Console.Write("Nume: ");
                         string numeFirma = Console.ReadLine();
-                        Firma.AppendToFile(new Firma(numeFirma), "firma.json");
+                        string parola=Console.ReadLine();
+                        Firma.AppendToFile(new Firma(numeFirma,parola), "firma.json");
                         firma = RefreshFirma();
                         break;
 
@@ -266,7 +267,7 @@ namespace Proiect_PIU
                     default:
                         Console.WriteLine("Optiune invalida.");
                         break;
-                }
+                }*/
                 Console.WriteLine();
             }
         }

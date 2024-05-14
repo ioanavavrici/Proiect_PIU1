@@ -49,8 +49,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Angajat.cs" />
+    <Compile Include="Angajat_Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Angajat_Login.Designer.cs">
+      <DependentUpon>Angajat_Login.cs</DependentUpon>
+    </Compile>
     <Compile Include="Client.cs" />
     <Compile Include="Firma.cs" />
+    <Compile Include="Firma_Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Firma_Login.Designer.cs">
+      <DependentUpon>Firma_Login.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +83,12 @@
     <None Include="Properties\DataSources\Angajat.datasource" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Angajat_Login.resx">
+      <DependentUpon>Angajat_Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Firma_Login.resx">
+      <DependentUpon>Firma_Login.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

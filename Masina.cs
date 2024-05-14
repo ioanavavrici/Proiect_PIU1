@@ -28,36 +28,41 @@ namespace Proiect_PIU
         public string Id { get; set; }
         public List<Client> IdClienti { get; set; }
         public string IdFirma { get; set; }
+        public float Pret {  get; set; }
+        public Dictionary<string,DateTime> date { get; set; }
         public string Model { get; set; }
-        public bool EsteDisponibila { get; set; }
+        
         public Culoare CuloareMasina { get; set; }
         public List<string> OptiuniMasina { get; set; } // Changed to List<string>
 
         // Constructor for initializing the car.
-        public Masina(string model, string culoareMasina, List<string> optiuniMasina)
+        public Masina(string model, string culoareMasina, List<string> optiuniMasina, float pret)
         {
             Id = Guid.NewGuid().ToString();
             Model = model;
-            EsteDisponibila = true;
+            
             CuloareMasina = ParseCuloare(culoareMasina);
             OptiuniMasina = optiuniMasina;
+            Pret = pret;
+            date = new Dictionary<string, DateTime>();
+         //   date.Add("",DateTime.Now);
         }
 
         // Deserialize constructor
         [JsonConstructor]
-        public Masina(string id, List<Client> idClienti, string idFirma, string model, bool esteDisponibila, Culoare culoareMasina, List<string> optiuniMasina)
+        public Masina(string id, List<Client> idClienti, string idFirma, string model, Culoare culoareMasina, List<string> optiuniMasina,float prte)
         {
             Id = id;
             IdClienti = idClienti;
             IdFirma = idFirma;
             Model = model;
-            EsteDisponibila = esteDisponibila;
             CuloareMasina = culoareMasina;
             OptiuniMasina = optiuniMasina;
+            Pret=prte;
         }
 
         // Helper method to parse string to Culoare enum
-        private Culoare ParseCuloare(string culoareString)
+        public Culoare ParseCuloare(string culoareString)
         {
             if (Enum.TryParse<Culoare>(culoareString, true, out Culoare culoare))
             {
@@ -77,7 +82,7 @@ namespace Proiect_PIU
 
         public override string ToString()
         {
-            return $"ID masina: {Id}, ID firma: {IdFirma}, Model: {Model}, Disponibila: {(EsteDisponibila ? "Da" : "Nu")}, Culoare: {CuloareMasina}, Optiunii: {string.Join(", ", GetOptiuniAsStrings())}";
+            return $"ID masina: {Id}, ID firma: {IdFirma}, Model: {Model}, Culoare: {CuloareMasina}, Optiunii: {string.Join(", ", GetOptiuniAsStrings())}";
         }
 
         public static void WriteToFile(List<Masina> masini, string fileName)

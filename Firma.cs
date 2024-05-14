@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 
 namespace Proiect_PIU
@@ -9,13 +10,15 @@ namespace Proiect_PIU
     {
         public string Id { get; set; }
         public string NumeFirma { get; set; }
+        public string Parola { get; set; }
         public List<Masina> MasiniDetinute { get; set; }
         public List<Angajat> Angajati { get; set; }
 
         // Constructor for initializing a firm
-        public Firma(string nume)
+        public Firma(string nume,string parola)
         {
             Id = Guid.NewGuid().ToString();
+            Parola = parola;
             NumeFirma = nume;
             MasiniDetinute = new List<Masina>();
             Angajati = new List<Angajat>();
