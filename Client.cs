@@ -21,17 +21,19 @@ namespace Proiect_PIU
         public string Parola { get; set; }
         public string IdFirma {  get; set; }
 
-        public DateTime data {  get; set; }
+        public DateTime data_Inceput {  get; set; }
+        public DateTime data_Final { get; set; }
 
         // Constructor pentru inițializarea unui client.
-        public Client(string nume, string prenume, string cnp, string parola,  DateTime data)
+        public Client(string nume, string prenume, string cnp, string parola, DateTime data_Inceput, DateTime data_Final)
         {
             Id = Guid.NewGuid().ToString();
             Nume = nume;
             Prenume = prenume;
             CNP = cnp;
             Parola = parola;
-            this.data = data;
+            this.data_Final = data_Final;
+            this.data_Inceput = data_Inceput;
         }
         public override string ToString()
         {

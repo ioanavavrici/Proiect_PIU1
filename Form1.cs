@@ -82,21 +82,31 @@ namespace Proiect_PIU
             dataGridViewClienti.Columns.Clear();
 
             // Add columns to DataGridView
-           
+            dataGridViewClienti.Columns.Add("Id", "Id");
+            dataGridViewClienti.Columns[0].Visible = false;
             dataGridViewClienti.Columns.Add("Nume", "Nume");
             dataGridViewClienti.Columns.Add("Prenume", "Prenume");
             dataGridViewClienti.Columns.Add("CNP", "CNP");
-           
+            dataGridViewClienti.Columns.Add("Data inchiriere","Data inchiriere");
+            dataGridViewClienti.Columns.Add("Data returnare", "Data returnare");
+
+
+
             if (client == null) {  return ; }
             // Add data to DataGridView
             foreach (var cli in client)
             {
-                dataGridViewClienti.Rows.Add(cli.Nume, cli.Prenume, cli.CNP);
+                if(cli.IdFirma==idfirma)
+                {
+                    dataGridViewClienti.Rows.Add(cli.Id,cli.Nume, cli.Prenume, cli.CNP,cli.data_Inceput,cli.data_Final); 
+                }
+                
             }
-            foreach (DataGridViewColumn column in dataGridViewClienti.Columns)
-            {
-                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
+
+          
+
+           
+            
         }
         public void loadObtions()
         {
@@ -127,6 +137,7 @@ namespace Proiect_PIU
             dataGridViewMasini.Columns.Add("Culoare", "Culoare");
             dataGridViewMasini.Columns.Add("Optiuni", "Optiuni");
             dataGridViewMasini.Columns.Add("Pret", "Pret");
+            dataGridViewMasini.Columns.Add("Date ocupate","Date");
             dataGridViewMasini.Columns[0].Visible = false;
 
             if (masini == null)
@@ -137,29 +148,34 @@ namespace Proiect_PIU
             // Add data to DataGridView
             foreach (var masina in masini)
             {
-                List<string> optiuni = masina.OptiuniMasina.ConvertAll(optiune => optiune.ToString()); // Convert List<Optiuni> to List<string>
-                dataGridViewMasini.Rows.Add(masina.Id,masina.Model, masina.CuloareMasina, string.Join(", ", optiuni) ,masina.Pret);
+                if (masina.IdFirma == idfirma)
+                {
+                    List<string> optiuni = masina.OptiuniMasina.ConvertAll(optiune => optiune.ToString()); // Convert List<Optiuni> to List<string>
+                    if (masina.date != null)
+                    {
+                        var allDates = masina.date.Values.SelectMany(dates => dates).ToList();
+
+
+                        var allDatesAsString = allDates.ConvertAll(date => date.ToString("yyyy-MM-dd"));
+
+
+                        string datesString = string.Join(", ", allDatesAsString);
+
+
+                        dataGridViewMasini.Rows.Add(masina.Id, masina.Model, masina.CuloareMasina, string.Join(", ", optiuni), masina.Pret, datesString);
+                    }
+                    else
+                        dataGridViewMasini.Rows.Add(masina.Id, masina.Model, masina.CuloareMasina, string.Join(", ", optiuni), masina.Pret, masina.date);
+                }
             }
-            foreach (DataGridViewColumn column in dataGridViewMasini.Columns)
-            {
-                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
+            
+
             grupBoxMasina.Visible = false;
            
         }
 
 
-        private void txtNumeAngajat_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-       
-
-        private void comboBoxFirma_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void dataGridViewMasini_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -205,6 +221,7 @@ namespace Proiect_PIU
             string prenume = textBoxPrenume_Client.Text;
             string CNP = textBoxCNP.Text;
             string Parola = textBoxParolaC.Text;
+            
 
             if(nume.Length==0 || prenume.Length==0 || CNP.Length==0 || Parola.Length==0)
             {
@@ -216,8 +233,15 @@ namespace Proiect_PIU
                 MessageBox.Show("CNP nu are lungimea 13 ");
                 return;
             }
-            DateTime data = dateTimePicker1.Value;
-            Client client_ = new Client(nume, prenume, CNP, Parola, data);
+            DateTime datai = dateTimePicker1.Value;
+            DateTime dataf = dateTimePicker2.Value;
+            if(dataf<=datai)
+            {
+                labelMesajEroare4.Text = "Data de inchiriere nu poate fi mai mare sau egala ca data de returnare ";
+                labelMesajEroare4.Visible = true;
+                return;
+            }
+            Client client_ = new Client(nume, prenume, CNP, Parola, datai,dataf);
           
 
             
@@ -228,14 +252,9 @@ namespace Proiect_PIU
                 Masina.WriteToFile(masini, "masini.json");
                 GetMasinaData(); // Refresh DataGridView
                 loadObtions();
-
-
-
-            
-           
           //  client.Add(new Client(nume, prenume, CNP, Parola));
             Client.WriteToFile(client, "client.json");
-            Client.AppendToFile(client_, "client.json");
+         
             client = Client.ReadFromFile("client.json");
 
             textBoxNum_Client.Clear();
@@ -243,7 +262,8 @@ namespace Proiect_PIU
             textBoxCNP.Clear();
             textBoxParolaC.Clear();
             GetClientData();
-          
+
+            labelMesajEroare4.Visible = false;
             groupBoxClient.Visible = false;
         }
        
@@ -322,12 +342,13 @@ namespace Proiect_PIU
 
                 masini.Add(newMasina);
                 Masina.WriteToFile(masini, "masini.json");
-                GetMasinaData(); // Refresh DataGridView
+                // Refresh DataGridView
 
                 firma_.AdaugaMasina(newMasina);
                 Firma.WriteToFile(firma, "firma.json");
                 textBoxModel.Clear();
                 checkedListBoxOptiuni.Items.Clear();
+                GetMasinaData();
                 loadObtions();
 
                
@@ -476,14 +497,12 @@ namespace Proiect_PIU
         private void buttonActualizareMasina_Click(object sender, EventArgs e)
         {  
             loadColors();
-            comboBoxCuloare.SelectedText = "";
-            comboBoxCuloare.SelectedIndex = -1;
-
             button1.Visible = false;
             buttonActualizareDateM.Visible = true ;
-            grupBoxMasina.Visible = true;
             if (dataGridViewMasini.SelectedRows.Count == 1)
             {
+                grupBoxMasina.Visible = true;
+
                 string masinaid = dataGridViewMasini.SelectedRows[0].Cells[0].Value.ToString();
                 foreach (Masina m in masini)
                 {
@@ -537,11 +556,68 @@ namespace Proiect_PIU
 
         private void buttonStergeClient_Click(object sender, EventArgs e)
         {
+            groupBoxClient.Visible = false;
+            if (dataGridViewClienti.SelectedRows.Count == 1)
+            {
+                string clientid = dataGridViewClienti.SelectedRows[0].Cells[0].Value.ToString();
+                foreach (Client c in client)
+                {
+                    if (c.Id == clientid)
+                    {
+                        client.Remove(c);
+                        firma_.Client.Remove(c);
+                        labelMesajEroare4.Text = "Clientul a fost sters";
+                        labelMesajEroare4.Visible = true;
+                        break;
+                    }
+                }
 
+            }
+            else
+            {
+                labelMesajEroare4.Text = "Nu ati selectat clientul pe care doriti sa o stergeti ";
+                labelMesajEroare4.Visible = true;
+            }
+            Firma.WriteToFile(firma, "firma.json");
+            Client.WriteToFile(client, "client.json");
+            client = Client.ReadFromFile("client.json");
+            GetClientData();
         }
 
         private void buttonActualizareClient_Click(object sender, EventArgs e)
         {
+
+            buttonAdaugaClient.Visible = false;
+            buttonAcClient.Visible = true;
+            groupBoxClient.Visible = true;
+
+            loadColors();
+           
+            if (dataGridViewClienti.SelectedRows.Count == 1)
+            {
+                string clientid = dataGridViewClienti.SelectedRows[0].Cells[0].Value.ToString();
+                foreach (Client c in client)
+                {
+                    if (c.Id == clientid)
+                    {
+                        textBoxNum_Client.Text = c.Nume;
+                        textBoxCNP.Text = c.CNP;
+                        textBoxParolaC.Text = c.Parola;
+                        textBoxPrenume_Client.Text = c.Prenume;
+                        dateTimePicker1.Text = c.data_Inceput.ToString();
+                        dateTimePicker2.Text = c.data_Final.ToString();
+                        break;
+
+                    }
+                }
+
+            }
+            else
+            {
+                labelMesajEroare4.Text = "Nu ati selectat clientul pe care doriti sa o actualizati ";
+                labelMesajEroare4.Visible = true;
+            }
+         
 
         }
 
@@ -560,10 +636,13 @@ namespace Proiect_PIU
         private void Add_Client_Click(object sender, EventArgs e)
         {
             groupBoxClient.Visible = true;
+            buttonAcClient.Visible = false;
+            buttonAdaugaClient.Visible=true;
         }
 
         private void buttonActualizareDateM_Click(object sender, EventArgs e)
-        { 
+        {
+            
             float pret;
             float.TryParse( txtBoxPret.Text,out pret); 
             string model =textBoxModel.Text;
@@ -573,24 +652,326 @@ namespace Proiect_PIU
              {
                 optiuni.Add(optiune.ToString());
              }
-            string masinaid = dataGridViewMasini.SelectedRows[0].Cells[0].Value.ToString();
-            foreach (Masina m in masini)
+            if (dataGridViewMasini.SelectedRows.Count == 1)
             {
-                if (m.Id == masinaid)
+                string masinaid = dataGridViewMasini.SelectedRows[0].Cells[0].Value.ToString();
+                foreach (Masina m in masini)
                 {
-                 m.Pret = pret;
-                 m.Model = model;
-                 m.CuloareMasina = m.ParseCuloare(culoare);
-                 m.OptiuniMasina = optiuni;
-                    break;
+                    if (m.Id == masinaid)
+                    {
+                        m.Pret = pret;
+                        m.Model = model;
+                        m.CuloareMasina = m.ParseCuloare(culoare);
+                        m.OptiuniMasina = optiuni;
+                        break;
+                    }
+                }
+
+                labelMesajEroare3.Text = "Datele despre masina au fost actualizate ";
+                labelMesajEroare3.Visible = true;
+                Firma.WriteToFile(firma, "firma.json");
+                Masina.WriteToFile(masini, "masini.json");
+                GetMasinaData();
+            }
+            else
+            {
+               // labelMesajEroare3.ForeColor = Color.Red;
+                labelMesajEroare3.Text = "Nu ati selectat masina pe care doriti sa o actualizati ";
+                labelMesajEroare3.Visible = true;
+            }
+
+        }
+
+        private void buttonAcClient_Click(object sender, EventArgs e)
+        {
+
+            if (dataGridViewClienti.SelectedRows.Count == 1)
+            {
+                string clientid = dataGridViewClienti.SelectedRows[0].Cells[0].Value.ToString();
+                foreach (Client c in client)
+                {
+                    if (c.Id == clientid)
+                    {
+                        c.Nume = textBoxNum_Client.Text;
+                        c.Prenume=textBoxPrenume_Client.Text;
+                        c.Parola=textBoxParolaC.Text;
+                        c.CNP = textBoxCNP.Text;
+                        c.data_Final = dateTimePicker2.Value;
+                        c.data_Inceput=dateTimePicker1.Value;
+                        if(c.data_Final<c.data_Inceput)
+                        {
+                            labelMesajEroare4.Text = "Data de inchiriere nu poate fi mai mare sau egala ca data de returnare ";
+                            labelMesajEroare4.Visible = true;
+                            return;
+                        }
+                        Client.WriteToFile(client, "client.json");
+                        client = Client.ReadFromFile("client.json");
+                        GetClientData();
+
+                        break;
+
+                    }
+                }
+
+            }
+            else
+            {
+                labelMesajEroare4.Text = "Nu ati selectat clientul pe care doriti sa o actualizati ";
+                labelMesajEroare4.Visible = true;
+            } 
+            groupBoxClient.Visible = false;
+            textBoxNum_Client.Clear();
+            textBoxPrenume_Client.Clear();
+            textBoxParolaC.Clear();
+            textBoxCNP.Clear();
+            labelMesajEroare4.Visible=false;
+          
+
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBoxMasiniDisponibile.Checked) 
+            {
+                if (dataGridViewClienti.SelectedRows.Count == 1)
+                {
+                    string clientid = dataGridViewClienti.SelectedRows[0].Cells[0].Value.ToString();
+                    string data_inchiriere = dataGridViewClienti.SelectedRows[0].Cells[4].Value.ToString();
+                    string data_returnare = dataGridViewClienti.SelectedRows[0].Cells[5].Value.ToString();
+                    dataGridViewMasini.Rows.Clear();
+                    dataGridViewMasini.Columns.Clear();
+
+                    // Add columns to DataGridView
+                    dataGridViewMasini.Columns.Add("Id", "Id");
+                    dataGridViewMasini.Columns.Add("Model", "Model");
+                    dataGridViewMasini.Columns.Add("Culoare", "Culoare");
+                    dataGridViewMasini.Columns.Add("Optiuni", "Optiuni");
+                    dataGridViewMasini.Columns.Add("Pret", "Pret");
+                    dataGridViewMasini.Columns.Add("Date ocupate", "Date");
+                    dataGridViewMasini.Columns[0].Visible = false;
+
+                    if (masini == null)
+                    {
+                        return;
+                    }
+
+                    // Add data to DataGridView
+                    foreach (var masina in masini)
+                    {
+                        if (masina.IdFirma == idfirma)
+                        {
+
+                            List<string> optiuni = masina.OptiuniMasina.ConvertAll(optiune => optiune.ToString());
+                            if (masina.date != null)
+                            {
+                                
+                                    
+                                
+                                
+                                    foreach (var d in masina.date)
+                                    {
+                                        DateTime.TryParse(data_returnare, out DateTime dr);
+                                        if (d.Value[0] > dr)
+                                        {
+                                            var allDates = masina.date.Values.SelectMany(dates => dates).ToList();
+
+
+                                            var allDatesAsString = allDates.ConvertAll(date => date.ToString("yyyy-MM-dd"));
+
+
+                                            string datesString = string.Join(", ", allDatesAsString);
+
+
+                                            dataGridViewMasini.Rows.Add(masina.Id, masina.Model, masina.CuloareMasina, string.Join(", ", optiuni), masina.Pret, datesString);
+                                        }
+                                        DateTime.TryParse(data_inchiriere, out DateTime di);
+                                        if (d.Equals(null))
+                                        {
+                                            var allDates = masina.date.Values.SelectMany(dates => dates).ToList();
+
+
+                                            var allDatesAsString = allDates.ConvertAll(date => date.ToString("yyyy-MM-dd"));
+
+
+                                            string datesString = string.Join(", ", allDatesAsString);
+
+
+                                            dataGridViewMasini.Rows.Add(masina.Id, masina.Model, masina.CuloareMasina, string.Join(", ", optiuni), masina.Pret, datesString);
+                                        }
+                                    }
+
+
+                                
+                            }
+                            else
+                            {
+                                dataGridViewMasini.Rows.Add(masina.Id, masina.Model, masina.CuloareMasina, string.Join(", ", optiuni), masina.Pret, masina.date);
+                            }
+                            
+                        }
+                    }
+                    foreach (DataGridViewColumn column in dataGridViewMasini.Columns)
+                    {
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+                    }
+
+                    grupBoxMasina.Visible = false;
+                }
+                else
+                {
+                    labelMesajEroare4.Text = "Nu ati selectat clientul ";
+                    labelMesajEroare4.Visible = true;
+                    return;
+                 
+                }
+                
+            }
+            else
+            {
+                GetMasinaData();
+                return;
+            }
+            dataGridViewMasini.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            
+            labelMesajEroare3.Visible = false;
+            labelMesajEroare4.Visible= false;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (checkBoxMasiniDisponibile.Checked)
+            {
+                if (dataGridViewClienti.SelectedRows.Count == 1)
+                {
+                    if (dataGridViewMasini.SelectedRows.Count ==1)
+                    {
+                        string data_inchiriere = dataGridViewClienti.SelectedRows[0].Cells[4].Value.ToString();
+                        DateTime.TryParse(data_inchiriere, out DateTime di);
+                       
+                        string data_returnare = dataGridViewClienti.SelectedRows[0].Cells[5].Value.ToString();
+                        DateTime.TryParse(data_returnare, out DateTime dr);
+                        List<DateTime> lista = new List<DateTime>();
+                        lista.Add(di);
+                        lista.Add(dr);
+                        string masinaId = dataGridViewMasini.SelectedRows[0].Cells[0].Value.ToString();
+                        string clientID=dataGridViewClienti.SelectedRows[0].Cells[0].Value.ToString();
+                        foreach (Masina m in masini)
+                        {
+                            
+                            if (m.Id == masinaId)
+                            {
+                            if(m.date==null)
+                            { m.date=new Dictionary<string, List<DateTime>>() { }; 
+                                }
+                                m.date.Add(clientID,lista);
+                                Masina.WriteToFile(masini, "masini.json");
+                                masini = Masina.ReadFromFile( "masini.json");
+                                GetMasinaData();
+                                break;
+                                
+                               
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        labelMesajEroare3.Text = "Nu ati selectat masina pe care doriti sa o inchiriati ";
+                        labelMesajEroare3.Visible = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    labelMesajEroare4.Text = "Nu ati selectat clientul care doreste sa inchirieze ";
+                    labelMesajEroare4.Visible = true;
+                    return;
                 }
             }
-           
-           labelMesajEroare3.Text = "Datele despre masina au fost actualizate ";
-           labelMesajEroare3.Visible = true;
-            Firma.WriteToFile(firma, "firma.json");
-            Masina.WriteToFile(masini, "masini.json");
+            else
+            {
+                labelMesajEroare3.Text = "Nu ati apasat butonul care afiseaza masinile disponibile ";
+                labelMesajEroare4.Visible = true;
+                labelMesajEroare3.Text = "Nu ati apasat butonul care afiseaza masinile disponibile ";
+                labelMesajEroare4.Visible = true;
+                return ;
+            }
+            labelMesajEroare3.Visible = false;
+            labelMesajEroare4.Visible = false;
+            checkBoxMasiniDisponibile.Checked = false;
             GetMasinaData();
+        }
+
+        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (checkBoxMasiniInchiriate.Checked)
+            {
+                dataGridViewMasini.Rows.Clear();
+                dataGridViewMasini.Columns.Clear();
+                dataGridViewMasini.Visible = true;
+
+                dataGridViewMasini.Columns.Add("Model", "Model");
+                dataGridViewMasini.Columns.Add("Client", "Client");
+                dataGridViewMasini.Columns.Add("Pret", "Pret");
+                dataGridViewMasini.Columns.Add("Date ocupate", "Date");
+
+
+                if (masini == null)
+                {
+                    return;
+                }
+
+                // Add data to DataGridView
+                foreach (var masina in masini)
+                {
+                    if (masina.IdFirma == idfirma)
+                    {
+
+                        if (masina.date != null)
+                        {
+                            var allDates = masina.date.Values.SelectMany(dates => dates).ToList();
+
+
+                            var allDatesAsString = allDates.ConvertAll(date => date.ToString("yyyy-MM-dd"));
+
+
+                            string datesString = string.Join(", ", allDatesAsString);
+                            foreach (Client c in client)
+                            {
+                                if (masina.date != null)
+                                {
+                                    foreach (var d in masina.date)
+                                    {
+                                        if (c.Id == d.Key)
+                                        {
+                                            dataGridViewMasini.Rows.Add(masina.Model, c.Nume, masina.Pret, datesString);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+                        break;
+                    }
+                }
+                foreach (DataGridViewColumn column in dataGridViewMasini.Columns)
+                {
+                    column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+                }
+
+                grupBoxMasina.Visible = false;
+            }
+            else
+            {
+                GetMasinaData();
+                grupBoxMasina.Visible = false;
+            }
+            dataGridViewMasini.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+          
 
         }
     }

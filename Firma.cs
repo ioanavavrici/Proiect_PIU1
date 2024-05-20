@@ -14,6 +14,8 @@ namespace Proiect_PIU
         public List<Masina> MasiniDetinute { get; set; }
         public List<Angajat> Angajati { get; set; }
 
+        public List<Client> Client { get; set; }
+
         // Constructor for initializing a firm
         public Firma(string nume,string parola)
         {
@@ -22,6 +24,7 @@ namespace Proiect_PIU
             NumeFirma = nume;
             MasiniDetinute = new List<Masina>();
             Angajati = new List<Angajat>();
+            Client = new List<Client>();
         }
 
         // Methods for adding machines and employees
@@ -33,6 +36,11 @@ namespace Proiect_PIU
         public void AdaugaAngajat(Angajat angajat)
         {
             Angajati.Add(angajat);
+        }
+
+        public void AdaugaClient(Client client)
+        {
+            Client.Add(client);
         }
 
         // Override ToString method

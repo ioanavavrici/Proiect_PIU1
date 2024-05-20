@@ -29,7 +29,7 @@ namespace Proiect_PIU
         public List<Client> IdClienti { get; set; }
         public string IdFirma { get; set; }
         public float Pret {  get; set; }
-        public Dictionary<string,DateTime> date { get; set; }
+        public Dictionary<string,List<DateTime>> date { get; set; }
         public string Model { get; set; }
         
         public Culoare CuloareMasina { get; set; }
@@ -44,7 +44,7 @@ namespace Proiect_PIU
             CuloareMasina = ParseCuloare(culoareMasina);
             OptiuniMasina = optiuniMasina;
             Pret = pret;
-            date = new Dictionary<string, DateTime>();
+            date =null;
          //   date.Add("",DateTime.Now);
         }
 

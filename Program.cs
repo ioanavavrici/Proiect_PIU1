@@ -19,8 +19,8 @@ namespace Proiect_PIU
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            Console.WriteLine("Meniu:");
+            Application.Run(new Firma_Login());
+           /* Console.WriteLine("Meniu:");
             Console.WriteLine("1. Afisare meniu consola");
             Console.WriteLine("2. Lansare Form1");
             Console.WriteLine("3. Iesire");
@@ -272,4 +272,3 @@ namespace Proiect_PIU
             }
         }
     }
-}

@@ -28,8 +28,8 @@ namespace Proiect_PIU
             firma = Firma.ReadFromFile(Path.Combine(path, "firma.json"));
 
             if (angajati == null)
-            { 
-                angajati = new List<Angajat>(); 
+            {
+                angajati = new List<Angajat>();
             }
             foreach (Firma firm in firma)
             {
@@ -99,7 +99,7 @@ namespace Proiect_PIU
             newAngajat.IDFirma = id_firma;
             angajati.Add(newAngajat);
             Angajat.WriteToFile(angajati, "angajati.json");
-            
+
             firma_.AdaugaAngajat(newAngajat);
             Firma.WriteToFile(firma, "firma.json");
             txtNumeAngajat.Clear();
@@ -109,7 +109,7 @@ namespace Proiect_PIU
             aplicatie.Show();
             this.Hide();
         }
-        
+
 
         private void Angajat_Login_Load(object sender, EventArgs e)
         {
@@ -127,31 +127,31 @@ namespace Proiect_PIU
                 textBoxMesajEroare.Visible = true;
                 return;
             }
-            if(parola.Length<8)
+            if (parola.Length < 8)
             {
                 textBoxMesajEroare.Text = "Parola trebuie sa aiba cel putin 8 caractere";
                 textBoxMesajEroare.Visible = true;
                 return;
             }
-            foreach(Angajat a in angajati)
+            foreach (Angajat a in angajati)
             {
-              
-                if(a.Prenume==prenume && a.Nume == nume && a.IDFirma==id_firma && a.Parola==parola)
+
+                if (a.Prenume == prenume && a.Nume == nume && a.IDFirma == id_firma && a.Parola == parola)
                 {
                     Form1 aplicatie = new Form1(id_firma);
                     aplicatie.Show();
                     this.Hide();
                     break;
                 }
-                
+
             }
-            if(this.Visible==true)
+            if (this.Visible == true)
             {
                 textBoxMesajEroare.Text = "Nu exista un angajat cu aceste date";
                 textBoxMesajEroare.Visible = true;
                 return;
             }
-           
+
 
             Angajat newAngajat = new Angajat(nume, prenume, parola);
             newAngajat.IDFirma = id_firma;
@@ -163,6 +163,13 @@ namespace Proiect_PIU
             txtNumeAngajat.Clear();
             txtPrenumeAngajat.Clear();
             txtParolaAngajat.Clear();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Firma_Login f = new Firma_Login();
+            f.Show();
+            this.Hide();
         }
     }
 }
