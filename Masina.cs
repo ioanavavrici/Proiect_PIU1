@@ -26,7 +26,7 @@ namespace Proiect_PIU
     public class Masina
     {
         public string Id { get; set; }
-        public List<Client> IdClienti { get; set; }
+       
         public string IdFirma { get; set; }
         public float Pret {  get; set; }
         public Dictionary<string,List<DateTime>> date { get; set; }
@@ -36,6 +36,7 @@ namespace Proiect_PIU
         public List<string> OptiuniMasina { get; set; } // Changed to List<string>
 
         // Constructor for initializing the car.
+        [JsonConstructor]
         public Masina(string model, string culoareMasina, List<string> optiuniMasina, float pret)
         {
             Id = Guid.NewGuid().ToString();
@@ -49,11 +50,11 @@ namespace Proiect_PIU
         }
 
         // Deserialize constructor
-        [JsonConstructor]
-        public Masina(string id, List<Client> idClienti, string idFirma, string model, Culoare culoareMasina, List<string> optiuniMasina,float prte)
+        
+        public Masina(string id,  string idFirma, string model, Culoare culoareMasina, List<string> optiuniMasina,float prte)
         {
             Id = id;
-            IdClienti = idClienti;
+            
             IdFirma = idFirma;
             Model = model;
             CuloareMasina = culoareMasina;

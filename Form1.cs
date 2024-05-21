@@ -344,10 +344,13 @@ namespace Proiect_PIU
                 Masina.WriteToFile(masini, "masini.json");
                 // Refresh DataGridView
 
-                firma_.AdaugaMasina(newMasina);
+                firma_.AdaugaMasina(newMasina.Id);
                 Firma.WriteToFile(firma, "firma.json");
                 textBoxModel.Clear();
+                txtBoxPret.Clear();
                 checkedListBoxOptiuni.Items.Clear();
+                comboBoxCuloare.Text = "";
+               
                 GetMasinaData();
                 loadObtions();
 
@@ -473,7 +476,7 @@ namespace Proiect_PIU
                     if(m.Id == masinaid)
                     {
                        masini.Remove(m);
-                       firma_.MasiniDetinute.Remove(m);
+                       firma_.MasiniDetinute.Remove(m.Id);
                         labelMesajEroare3.Text = "Masina a fost stearsa";
                         labelMesajEroare3.Visible = true;
                        break;
@@ -565,7 +568,7 @@ namespace Proiect_PIU
                     if (c.Id == clientid)
                     {
                         client.Remove(c);
-                        firma_.Client.Remove(c);
+                        firma_.Client.Remove(c.Id);
                         labelMesajEroare4.Text = "Clientul a fost sters";
                         labelMesajEroare4.Visible = true;
                         break;
@@ -663,15 +666,23 @@ namespace Proiect_PIU
                         m.Model = model;
                         m.CuloareMasina = m.ParseCuloare(culoare);
                         m.OptiuniMasina = optiuni;
+                        
                         break;
                     }
                 }
 
+                comboBoxCuloare.Text = "";
+                txtBoxPret.Clear();
+                textBoxModel.Clear();
                 labelMesajEroare3.Text = "Datele despre masina au fost actualizate ";
                 labelMesajEroare3.Visible = true;
+                checkedListBoxOptiuni.Items.Clear();
+                loadObtions();
+
                 Firma.WriteToFile(firma, "firma.json");
                 Masina.WriteToFile(masini, "masini.json");
                 GetMasinaData();
+
             }
             else
             {
@@ -698,7 +709,7 @@ namespace Proiect_PIU
                         c.CNP = textBoxCNP.Text;
                         c.data_Final = dateTimePicker2.Value;
                         c.data_Inceput=dateTimePicker1.Value;
-                        if(c.data_Final<c.data_Inceput)
+                        if(c.data_Final<c.data_Inceput )
                         {
                             labelMesajEroare4.Text = "Data de inchiriere nu poate fi mai mare sau egala ca data de returnare ";
                             labelMesajEroare4.Visible = true;
@@ -811,12 +822,7 @@ namespace Proiect_PIU
                             
                         }
                     }
-                    foreach (DataGridViewColumn column in dataGridViewMasini.Columns)
-                    {
-                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-                    }
-
+                   
                     grupBoxMasina.Visible = false;
                 }
                 else
@@ -833,7 +839,7 @@ namespace Proiect_PIU
                 GetMasinaData();
                 return;
             }
-            dataGridViewMasini.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            
             
             labelMesajEroare3.Visible = false;
             labelMesajEroare4.Visible= false;
@@ -863,11 +869,19 @@ namespace Proiect_PIU
                             if (m.Id == masinaId)
                             {
                             if(m.date==null)
-                            { m.date=new Dictionary<string, List<DateTime>>() { }; 
+                            { m.date=new Dictionary<string, List<DateTime>>(); 
                                 }
                                 m.date.Add(clientID,lista);
                                 Masina.WriteToFile(masini, "masini.json");
+                   
+                                foreach(Firma f in firma)
+                                {
+                                    if (firma_.Id == f.Id)
+                                        f.AdaugaClient(clientID);
+                                }
+                                Firma.WriteToFile(firma, "firma.json");
                                 masini = Masina.ReadFromFile( "masini.json");
+                                
                                 GetMasinaData();
                                 break;
                                 
@@ -957,11 +971,7 @@ namespace Proiect_PIU
                         break;
                     }
                 }
-                foreach (DataGridViewColumn column in dataGridViewMasini.Columns)
-                {
-                    column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-                }
+                
 
                 grupBoxMasina.Visible = false;
             }
@@ -970,7 +980,7 @@ namespace Proiect_PIU
                 GetMasinaData();
                 grupBoxMasina.Visible = false;
             }
-            dataGridViewMasini.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+          
           
 
         }

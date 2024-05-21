@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace Proiect_PIU
@@ -11,34 +10,42 @@ namespace Proiect_PIU
         public string Id { get; set; }
         public string NumeFirma { get; set; }
         public string Parola { get; set; }
-        public List<Masina> MasiniDetinute { get; set; }
-        public List<Angajat> Angajati { get; set; }
+        public List<string> MasiniDetinute { get; set; }
+        public List<string> Angajati { get; set; }
+        public List<string> Client { get; set; }
 
-        public List<Client> Client { get; set; }
+        // Parameterless constructor needed for deserialization
+        public Firma()
+        {
+            MasiniDetinute = new List<string>();
+            Angajati = new List<string>();
+            Client = new List<string>();
+        }
 
         // Constructor for initializing a firm
-        public Firma(string nume,string parola)
+        [JsonConstructor]
+        public Firma(string nume, string parola)
         {
             Id = Guid.NewGuid().ToString();
             Parola = parola;
             NumeFirma = nume;
-            MasiniDetinute = new List<Masina>();
-            Angajati = new List<Angajat>();
-            Client = new List<Client>();
+            MasiniDetinute = new List<string>();
+            Angajati = new List<string>();
+            Client = new List<string>();
         }
 
         // Methods for adding machines and employees
-        public void AdaugaMasina(Masina masina)
+        public void AdaugaMasina(string masina)
         {
             MasiniDetinute.Add(masina);
         }
 
-        public void AdaugaAngajat(Angajat angajat)
+        public void AdaugaAngajat(string angajat)
         {
             Angajati.Add(angajat);
         }
 
-        public void AdaugaClient(Client client)
+        public void AdaugaClient(string client)
         {
             Client.Add(client);
         }
@@ -52,12 +59,10 @@ namespace Proiect_PIU
         // Methods for writing and reading from file
         public static void WriteToFile(List<Firma> firme, string fileName)
         {
-            string json = JsonConvert.SerializeObject(firme, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
+            string json = JsonConvert.SerializeObject(firme);
             File.WriteAllText(fileName, json);
         }
+
         public static void AppendToFile(Firma firma, string fileName)
         {
             List<Firma> firme = ReadFromFile(fileName);
@@ -72,14 +77,11 @@ namespace Proiect_PIU
             if (File.Exists(fileName))
             {
                 string json = File.ReadAllText(fileName);
-                firme = JsonConvert.DeserializeObject<List<Firma>>(json, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
-            }
+                firme = JsonConvert.DeserializeObject<List<Firma>>(json);
 
+              
+            } 
             return firme;
         }
-
     }
 }

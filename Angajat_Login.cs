@@ -100,7 +100,7 @@ namespace Proiect_PIU
             angajati.Add(newAngajat);
             Angajat.WriteToFile(angajati, "angajati.json");
 
-            firma_.AdaugaAngajat(newAngajat);
+            firma_.AdaugaAngajat(newAngajat.Id);
             Firma.WriteToFile(firma, "firma.json");
             txtNumeAngajat.Clear();
             txtPrenumeAngajat.Clear();
@@ -158,7 +158,7 @@ namespace Proiect_PIU
             angajati.Add(newAngajat);
             Angajat.WriteToFile(angajati, "angajati.json");
 
-            firma_.AdaugaAngajat(newAngajat);
+            firma_.AdaugaAngajat(newAngajat.Id);
             Firma.WriteToFile(firma, "firma.json");
             txtNumeAngajat.Clear();
             txtPrenumeAngajat.Clear();

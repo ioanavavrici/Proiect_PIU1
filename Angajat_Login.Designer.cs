@@ -42,7 +42,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(609, 274);
+            this.label3.Location = new System.Drawing.Point(720, 248);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(68, 25);
@@ -53,7 +53,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(514, 200);
+            this.label2.Location = new System.Drawing.Point(625, 174);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(163, 25);
@@ -67,7 +67,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(543, 132);
+            this.label1.Location = new System.Drawing.Point(654, 106);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(133, 25);
@@ -77,7 +77,7 @@
             // 
             // txtParolaAngajat
             // 
-            this.txtParolaAngajat.Location = new System.Drawing.Point(713, 269);
+            this.txtParolaAngajat.Location = new System.Drawing.Point(824, 243);
             this.txtParolaAngajat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtParolaAngajat.Name = "txtParolaAngajat";
             this.txtParolaAngajat.Size = new System.Drawing.Size(148, 30);
@@ -86,7 +86,7 @@
             // 
             // txtPrenumeAngajat
             // 
-            this.txtPrenumeAngajat.Location = new System.Drawing.Point(713, 196);
+            this.txtPrenumeAngajat.Location = new System.Drawing.Point(824, 170);
             this.txtPrenumeAngajat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPrenumeAngajat.Name = "txtPrenumeAngajat";
             this.txtPrenumeAngajat.Size = new System.Drawing.Size(148, 30);
@@ -95,7 +95,7 @@
             // 
             // txtNumeAngajat
             // 
-            this.txtNumeAngajat.Location = new System.Drawing.Point(713, 127);
+            this.txtNumeAngajat.Location = new System.Drawing.Point(824, 101);
             this.txtNumeAngajat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtNumeAngajat.Name = "txtNumeAngajat";
             this.txtNumeAngajat.Size = new System.Drawing.Size(148, 30);
@@ -104,7 +104,7 @@
             // 
             // buttonSign
             // 
-            this.buttonSign.Location = new System.Drawing.Point(713, 339);
+            this.buttonSign.Location = new System.Drawing.Point(824, 313);
             this.buttonSign.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSign.Name = "buttonSign";
             this.buttonSign.Size = new System.Drawing.Size(150, 47);
@@ -115,7 +115,7 @@
             // 
             // Login
             // 
-            this.Login.Location = new System.Drawing.Point(528, 339);
+            this.Login.Location = new System.Drawing.Point(639, 313);
             this.Login.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Login.Name = "Login";
             this.Login.Size = new System.Drawing.Size(160, 47);
@@ -126,7 +126,7 @@
             // 
             // textBoxMesajEroare
             // 
-            this.textBoxMesajEroare.Location = new System.Drawing.Point(479, 413);
+            this.textBoxMesajEroare.Location = new System.Drawing.Point(590, 387);
             this.textBoxMesajEroare.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxMesajEroare.Name = "textBoxMesajEroare";
             this.textBoxMesajEroare.Size = new System.Drawing.Size(487, 30);
